@@ -9,11 +9,35 @@ export async function requireUser() {
     throw new Error("Unauthorized");
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { email: user.email }
+  let dbUser = await prisma.user.findUnique({
+    where: { id: user.id }
   });
 
-  if (!dbUser || !dbUser.isActive) {
+  // JIT Provisioning & Sync: Auto-create or link Prisma User if missing
+  if (!dbUser) {
+    const existingByEmail = await prisma.user.findUnique({
+      where: { email: user.email }
+    });
+
+    if (existingByEmail) {
+      // Link seeded admin user to real Supabase UUID
+      dbUser = await prisma.user.update({
+        where: { email: user.email },
+        data: { id: user.id }
+      });
+    } else {
+      // Create new customer
+      dbUser = await prisma.user.create({
+        data: {
+          id: user.id,
+          email: user.email!,
+          role: "CUSTOMER",
+        }
+      });
+    }
+  }
+
+  if (!dbUser.isActive) {
     throw new Error("User not found or inactive");
   }
 
