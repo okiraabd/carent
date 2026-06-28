@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Camera, LayoutDashboard, Package, Settings, Users, ArrowLeft, ClipboardCheck, BarChart3 } from "lucide-react";
 import { requireAdmin } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
+import { LogoutButton } from "@/components/logout-button";
 
 export default async function AdminLayout({
   children,
@@ -12,6 +13,7 @@ export default async function AdminLayout({
     // Securely verify admin/manager role via Database
     await requireAdmin();
   } catch (error) {
+    console.error("AdminLayout Auth Error:", error);
     redirect("/katalog");
   }
 
@@ -92,11 +94,12 @@ export default async function AdminLayout({
         <div className="p-4 border-t border-surface-200">
           <Link
             href="/katalog"
-            className="flex items-center gap-2 text-xs font-medium text-text-muted hover:text-text-primary transition-colors"
+            className="flex items-center gap-2 text-xs font-medium text-text-muted hover:text-text-primary transition-colors mb-4"
           >
             <ArrowLeft className="h-3 w-3" />
             Kembali ke Web
           </Link>
+          <LogoutButton variant="sidebar" />
         </div>
       </aside>
 

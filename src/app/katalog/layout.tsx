@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Camera, User, ListOrdered } from "lucide-react";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { LogoutButton } from "@/components/logout-button";
 
 export default async function KatalogLayout({
   children,
@@ -52,6 +53,7 @@ export default async function KatalogLayout({
                 <User className="h-4 w-4" />
                 <span>{displayEmail}</span>
               </Link>
+              <LogoutButton variant="ghost" />
             </div>
           </div>
         </div>
