@@ -31,6 +31,18 @@ export default async function CustomerProfilePage({ params }: { params: Promise<
     notFound();
   }
 
+  const bookingMetrics = await prisma.booking.aggregate({
+    where: { 
+      profileId: id,
+      status: { notIn: ['DRAFT', 'CANCELLED', 'REJECTED_PAYMENT'] } 
+    },
+    _count: { id: true },
+    _sum: { totalAmount: true }
+  });
+
+  const totalTransactions = bookingMetrics._count.id;
+  const totalRevenue = bookingMetrics._sum.totalAmount || 0;
+
   const m = profile.metrics;
 
   return (
@@ -105,7 +117,7 @@ export default async function CustomerProfilePage({ params }: { params: Promise<
                 <Package className="w-4 h-4" />
                 <span className="text-sm font-medium">Total Transaksi</span>
               </div>
-              <div className="text-3xl font-bold font-heading">{m?.totalTransactions || 0}</div>
+              <div className="text-3xl font-bold font-heading">{totalTransactions}</div>
             </div>
             
             <div className="glass-card p-5">
@@ -114,7 +126,7 @@ export default async function CustomerProfilePage({ params }: { params: Promise<
                 <span className="text-sm font-medium">Total Belanja</span>
               </div>
               <div className="text-2xl font-bold font-heading text-brand-600">
-                Rp {Number(m?.totalRevenue || 0).toLocaleString('id-ID')}
+                Rp {Number(totalRevenue).toLocaleString('id-ID')}
               </div>
             </div>
 

@@ -15,7 +15,18 @@ export default async function AdminUsersPage() {
     },
     include: {
       user: true,
-      metrics: true
+      metrics: true,
+      bookings: {
+        where: {
+          status: {
+            notIn: ['DRAFT', 'CANCELLED', 'REJECTED_PAYMENT']
+          }
+        },
+        select: {
+          id: true,
+          totalAmount: true
+        }
+      }
     },
     orderBy: {
       createdAt: 'desc'
@@ -88,10 +99,10 @@ export default async function AdminUsersPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right font-medium">
-                    {profile.metrics?.totalTransactions || 0}
+                    {profile.bookings.length}
                   </td>
                   <td className="px-6 py-4 text-right font-medium text-brand-600">
-                    Rp {Number(profile.metrics?.totalRevenue || 0).toLocaleString("id-ID")}
+                    Rp {Number(profile.bookings.reduce((sum, b) => sum + Number(b.totalAmount), 0)).toLocaleString("id-ID")}
                   </td>
                   <td className="px-6 py-4 text-center">
                     <Link 
