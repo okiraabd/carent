@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Carent — Action Camera Rental Management System
 
-## Getting Started
+Carent is a modern, enterprise-grade web application built to manage action camera rentals efficiently. It features a robust Next.js frontend, Prisma ORM for database management, and a highly interactive Admin Analytics Dashboard.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 1. Enterprise Analytics Dashboard (`/admin/analytics`)
+- **Real-time KPI Metrics**: Tracks Gross Revenue, Completed Bookings, Available Cameras, and Total Inventory. *(Note: Gross Revenue intelligently excludes Security Deposits for accurate accounting).*
+- **Dynamic Time Filtering**: Filter analytics by the last 30 days, this month, this year, or all time.
+- **Peak Analysis**: Automatically calculates and highlights Peak Revenue, Peak Bookings, and Low Season (Peak Availability) based on the selected timeframe.
+- **Interactive Recharts**: Visualizes Revenue Trends and Booking Volumes with smooth responsive charts.
+
+### 2. Drill-Down Analytics (Smart Charts)
+- **Clickable Data Nodes**: Administrators can click on any data point (bar or line node) on the Analytics Dashboard.
+- **Context-Aware Navigation**: 
+  - Clicking on the **Revenue Trend** line chart redirects to the Bookings Module filtered by the exact payment verification date.
+  - Clicking on the **Booking Volume** bar chart redirects to the Bookings Module filtered by the exact rental start date.
+
+### 3. Smart Booking Management (`/admin/bookings`)
+- Comprehensive table of all rental transactions.
+- **URL Parameter Filtering**: Automatically filters bookings based on `rentalStartDate` or `paymentVerifiedDate` passed from the Analytics dashboard.
+- Displays clear UI filter badges to let admins know when they are viewing a filtered state.
+
+### 4. Robust Database Seeding
+- `prisma/seed.ts` is capable of generating massive amounts of realistic dummy data (customers, cameras, accessories, and hundreds of bookings) to thoroughly test the analytics and management modules.
+
+## 🛠 Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org) (App Router)
+- **Styling**: Tailwind CSS v4, Lucide React (Icons)
+- **Charts**: [Recharts](https://recharts.org/)
+- **Database ORM**: [Prisma](https://www.prisma.io/)
+- **Database Provider**: PostgreSQL (Supabase)
+- **Utilities**: `date-fns` for robust date manipulation
+
+## 🚦 Getting Started
+
+First, ensure you have set up your PostgreSQL database and connected it via `.env`:
+```env
+DATABASE_URL="postgresql://..."
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the database migrations and seed the data:
+```bash
+npx prisma generate
+npx prisma db push
+npx tsx --env-file=.env prisma/seed.ts
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Start the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the application in action.
