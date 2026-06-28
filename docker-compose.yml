@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  carent-app:
+    build: .
+    container_name: carent_app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # Database connection
+      - DATABASE_URL=${DATABASE_URL}
+      # Supabase Client Env
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: carent_tunnel
+    restart: always
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - carent-app
