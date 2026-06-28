@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ProfileForm } from "./_components/profile-form";
+import { ChangePasswordForm } from "./_components/change-password-form";
 import Link from "next/link";
 import { ArrowLeft, UserCircle } from "lucide-react";
 
@@ -57,6 +58,8 @@ export default async function ProfilePage() {
             </div>
 
             <ProfileForm initialData={profile} />
+
+            <ChangePasswordForm />
           </div>
         </div>
       </div>

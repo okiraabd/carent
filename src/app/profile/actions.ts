@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth-utils";
+import { createClient } from "@/lib/supabase/server";
 
 export async function saveProfile(formData: FormData) {
   let user;
@@ -59,3 +60,39 @@ export async function saveProfile(formData: FormData) {
     return { error: "Terjadi kesalahan saat menyimpan profil" };
   }
 }
+
+export async function updatePassword(formData: FormData) {
+  let user;
+  try {
+    const auth = await requireUser();
+    user = auth.user;
+  } catch (error) {
+    return { error: "Unauthorized" };
+  }
+
+  const newPassword = formData.get("newPassword") as string;
+  const confirmPassword = formData.get("confirmPassword") as string;
+
+  if (!newPassword || newPassword.length < 6) {
+    return { error: "Password baru harus minimal 6 karakter" };
+  }
+
+  if (newPassword !== confirmPassword) {
+    return { error: "Konfirmasi password tidak cocok" };
+  }
+
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) throw error;
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Update password error:", error);
+    return { error: error.message || "Gagal mengubah password" };
+  }
+}
+
