@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Camera, LayoutDashboard, Package, Settings, Users, ArrowLeft, ClipboardCheck, BarChart3 } from "lucide-react";
+import { Camera, LayoutDashboard, Package, Settings, Users, ArrowLeft, ClipboardCheck, BarChart3, User } from "lucide-react";
 import { requireAdmin } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "@/components/logout-button";
@@ -9,13 +9,18 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  let adminUser;
   try {
     // Securely verify admin/manager role via Database
-    await requireAdmin();
+    const { user } = await requireAdmin();
+    adminUser = user;
   } catch (error) {
     console.error("AdminLayout Auth Error:", error);
     redirect("/katalog");
   }
+
+  const userEmail = adminUser?.email || "Admin";
+  const displayEmail = userEmail.length > 15 ? userEmail.substring(0, 15) + "..." : userEmail;
 
   return (
     <div className="min-h-screen bg-surface-50 flex">
@@ -94,18 +99,26 @@ export default async function AdminLayout({
         <div className="p-4 border-t border-surface-200">
           <Link
             href="/katalog"
-            className="flex items-center gap-2 text-xs font-medium text-text-muted hover:text-text-primary transition-colors mb-4"
+            className="flex items-center gap-2 text-xs font-medium text-text-muted hover:text-text-primary transition-colors"
           >
             <ArrowLeft className="h-3 w-3" />
             Kembali ke Web
           </Link>
-          <LogoutButton variant="sidebar" />
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <div className="p-8 max-w-6xl mx-auto">
+      <main className="flex-1 overflow-auto flex flex-col">
+        {/* Top Header */}
+        <header className="h-16 border-b border-surface-200 glass flex items-center justify-end px-8 shrink-0 gap-4">
+          <div className="flex items-center gap-2 text-sm font-medium text-text-secondary px-3 py-2 rounded-lg border border-transparent">
+            <User className="h-4 w-4" />
+            <span>{displayEmail}</span>
+          </div>
+          <LogoutButton variant="ghost" />
+        </header>
+
+        <div className="p-8 max-w-6xl mx-auto flex-1 w-full">
           {children}
         </div>
       </main>
