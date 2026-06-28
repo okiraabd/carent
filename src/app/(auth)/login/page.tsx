@@ -42,9 +42,9 @@ export default function LoginPage() {
       const role = user?.user_metadata?.role || "CUSTOMER";
 
       if (role === "ADMIN") {
-        router.push("/admin/dashboard");
+        router.push("/admin");
       } else if (role === "MANAGER") {
-        router.push("/manager/dashboard");
+        router.push("/admin");
       } else {
         router.push("/katalog");
       }
