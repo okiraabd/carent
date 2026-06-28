@@ -5,19 +5,15 @@ import { revalidatePath } from "next/cache";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { differenceInHours } from "date-fns";
+import { requireAdmin } from "@/lib/auth-utils";
 
 export async function processReturn(formData: FormData) {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll: () => cookieStore.getAll() } }
-  );
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { error: "Not authenticated" };
+  let user;
+  try {
+    const auth = await requireAdmin();
+    user = auth.user;
+  } catch (error) {
+    return { error: "Unauthorized" };
   }
 
   const bookingId = formData.get("bookingId") as string;

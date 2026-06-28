@@ -51,37 +51,16 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // If authenticated and trying to access auth pages, redirect to appropriate dashboard
+  // If authenticated and trying to access auth pages, redirect to home/katalog
   if (user && (pathname === "/login" || pathname === "/register")) {
     const url = request.nextUrl.clone();
-    // We'll check the user's role from metadata
-    const role = user.user_metadata?.role || "CUSTOMER";
-    if (role === "ADMIN") {
-      url.pathname = "/admin/dashboard";
-    } else if (role === "MANAGER") {
-      url.pathname = "/manager/dashboard";
-    } else {
-      url.pathname = "/katalog";
-    }
+    url.pathname = "/katalog";
     return NextResponse.redirect(url);
   }
 
-  // Role-based route protection
-  if (user) {
-    const role = user.user_metadata?.role || "CUSTOMER";
-
-    if (pathname.startsWith("/admin") && role !== "ADMIN" && role !== "MANAGER") {
-      const url = request.nextUrl.clone();
-      url.pathname = "/katalog";
-      return NextResponse.redirect(url);
-    }
-
-    if (pathname.startsWith("/manager") && role !== "MANAGER") {
-      const url = request.nextUrl.clone();
-      url.pathname = role === "ADMIN" ? "/admin/dashboard" : "/katalog";
-      return NextResponse.redirect(url);
-    }
-  }
+  // Note: Role-based route protection for /admin and /manager 
+  // is now handled securely via Server Components (Layouts) and Server Actions 
+  // by querying the database directly, rather than trusting user_metadata.
 
   return supabaseResponse;
 }

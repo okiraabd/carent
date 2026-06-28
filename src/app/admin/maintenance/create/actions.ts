@@ -3,8 +3,10 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/auth-utils";
 
 export async function createMaintenanceRecord(formData: FormData) {
+  await requireAdmin();
   const cameraId = formData.get("cameraId") as string;
   const description = formData.get("description") as string;
   const type = formData.get("type") as any; // SCHEDULED, REPAIR, REPLACEMENT, INSPECTION

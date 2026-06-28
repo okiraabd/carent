@@ -2,9 +2,11 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth-utils";
 
 export async function verifyPayment(bookingId: string) {
   try {
+    await requireAdmin();
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
       include: { payments: true }
@@ -41,6 +43,7 @@ export async function verifyPayment(bookingId: string) {
 
 export async function rejectPayment(bookingId: string) {
   try {
+    await requireAdmin();
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
       include: { payments: true }

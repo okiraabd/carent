@@ -47,7 +47,6 @@ export default function RegisterPage() {
         password: formData.password,
         options: {
           data: {
-            role: "CUSTOMER",
             full_name: formData.fullName,
             phone: formData.phone,
           },

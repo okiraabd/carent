@@ -1,11 +1,20 @@
 import Link from "next/link";
 import { Camera, LayoutDashboard, Package, Settings, Users, ArrowLeft, ClipboardCheck, BarChart3 } from "lucide-react";
+import { requireAdmin } from "@/lib/auth-utils";
+import { redirect } from "next/navigation";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  try {
+    // Securely verify admin/manager role via Database
+    await requireAdmin();
+  } catch (error) {
+    redirect("/katalog");
+  }
+
   return (
     <div className="min-h-screen bg-surface-50 flex">
       {/* Sidebar */}

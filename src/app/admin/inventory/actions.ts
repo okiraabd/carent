@@ -2,9 +2,11 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth-utils";
 
 export async function updateCameraStatus(cameraId: string, status: any) {
   try {
+    await requireAdmin();
     await prisma.camera.update({
       where: { id: cameraId },
       data: { status }
@@ -21,6 +23,7 @@ export async function updateCameraStatus(cameraId: string, status: any) {
 
 export async function createCamera(formData: FormData) {
   try {
+    await requireAdmin();
     const code = formData.get("code") as string;
     const brand = formData.get("brand") as string;
     const model = formData.get("model") as string;
@@ -53,6 +56,7 @@ export async function createCamera(formData: FormData) {
 
 export async function updateCamera(id: string, formData: FormData) {
   try {
+    await requireAdmin();
     const code = formData.get("code") as string;
     const brand = formData.get("brand") as string;
     const model = formData.get("model") as string;

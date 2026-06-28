@@ -2,8 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth-utils";
 
 export async function resolveMaintenance(formData: FormData) {
+  await requireAdmin();
   const maintenanceId = formData.get("maintenanceId") as string;
   const resolution = formData.get("resolution") as string;
   const replacedParts = formData.get("replacedParts") as string;
