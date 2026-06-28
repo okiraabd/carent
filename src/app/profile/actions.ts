@@ -70,8 +70,13 @@ export async function updatePassword(formData: FormData) {
     return { error: "Unauthorized" };
   }
 
+  const oldPassword = formData.get("oldPassword") as string;
   const newPassword = formData.get("newPassword") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
+
+  if (!oldPassword) {
+    return { error: "Password lama wajib diisi" };
+  }
 
   if (!newPassword || newPassword.length < 6) {
     return { error: "Password baru harus minimal 6 karakter" };
@@ -83,6 +88,18 @@ export async function updatePassword(formData: FormData) {
 
   try {
     const supabase = await createClient();
+
+    // Verifikasi password lama dengan mencoba sign-in
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: user.email!,
+      password: oldPassword,
+    });
+
+    if (signInError) {
+      return { error: "Password lama salah" };
+    }
+
+    // Update ke password baru
     const { error } = await supabase.auth.updateUser({
       password: newPassword
     });

@@ -51,35 +51,51 @@ export function ChangePasswordForm() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <div className="space-y-6">
         <div className="space-y-2">
-          <label htmlFor="newPassword" className="text-sm font-medium text-text-secondary">
-            Password Baru <span className="text-accent-error">*</span>
+          <label htmlFor="oldPassword" className="text-sm font-medium text-text-secondary">
+            Password Lama <span className="text-accent-error">*</span>
           </label>
           <input
-            id="newPassword"
-            name="newPassword"
+            id="oldPassword"
+            name="oldPassword"
             type="password"
             required
-            minLength={6}
-            placeholder="Minimal 6 karakter"
-            className="w-full px-4 py-3 rounded-xl bg-surface-100 border border-surface-200 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all placeholder:text-text-muted"
+            placeholder="Masukkan password saat ini"
+            className="w-full sm:w-1/2 px-4 py-3 rounded-xl bg-surface-100 border border-surface-200 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all placeholder:text-text-muted"
           />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="confirmPassword" className="text-sm font-medium text-text-secondary">
-            Konfirmasi Password Baru <span className="text-accent-error">*</span>
-          </label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            required
-            minLength={6}
-            placeholder="Ketik ulang password baru"
-            className="w-full px-4 py-3 rounded-xl bg-surface-100 border border-surface-200 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all placeholder:text-text-muted"
-          />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="space-y-2">
+            <label htmlFor="newPassword" className="text-sm font-medium text-text-secondary">
+              Password Baru <span className="text-accent-error">*</span>
+            </label>
+            <input
+              id="newPassword"
+              name="newPassword"
+              type="password"
+              required
+              minLength={6}
+              placeholder="Minimal 6 karakter"
+              className="w-full px-4 py-3 rounded-xl bg-surface-100 border border-surface-200 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all placeholder:text-text-muted"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="confirmPassword" className="text-sm font-medium text-text-secondary">
+              Konfirmasi Password Baru <span className="text-accent-error">*</span>
+            </label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              required
+              minLength={6}
+              placeholder="Ketik ulang password baru"
+              className="w-full px-4 py-3 rounded-xl bg-surface-100 border border-surface-200 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition-all placeholder:text-text-muted"
+            />
+          </div>
         </div>
       </div>
 
